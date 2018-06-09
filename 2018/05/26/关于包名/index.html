@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>关于包名 - Amon的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content=struts2>
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="Amon的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">Amon的博客</a>
+    <div class="subtitle">瞎扯点儿东西</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">归档</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">关于包名</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2018-05-26</span>
+  </div>
+  <div class="post-content">
+    <h1 id="关于包名"><a href="#关于包名" class="headerlink" title="关于包名"></a>关于包名</h1><p>在struts2.xml中的package配置了namespace后，则该包下所有action处理的URL应该为“命名空间+Action名”。</p>
+<p>例如：<br>原先struts2.xml配置如下，并没有配置namespace<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">package</span> <span class="attr">name</span>=<span class="string">"helloworld"</span> <span class="attr">extends</span>=<span class="string">"struts-default"</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">   <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"hello"</span>  <span class="attr">class</span>=<span class="string">"struts2001.HelloWorldAction"</span>  <span class="attr">method</span>=<span class="string">"execute"</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">result</span> <span class="attr">name</span>=<span class="string">"success"</span>&gt;</span>/HelloWord.jsp<span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">action</span>&gt;</span></span><br><span class="line">   </span><br><span class="line"><span class="tag">&lt;/<span class="name">package</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>则访问时可以这么写<strong><a href="http://localhost:8080/struts2001/hello.action" target="_blank" rel="noopener">http://localhost:8080/struts2001/hello.action</a></strong></p>
+<p>配置了namespace后如下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">package</span> <span class="attr">namespace</span>=<span class="string">"/hello"</span> <span class="attr">name</span>=<span class="string">"helloworld"</span> <span class="attr">extends</span>=<span class="string">"struts-default"</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">   <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"hello"</span>  <span class="attr">class</span>=<span class="string">"struts2001.HelloWorldAction"</span>  <span class="attr">method</span>=<span class="string">"execute"</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">result</span> <span class="attr">name</span>=<span class="string">"success"</span>&gt;</span>/HelloWord.jsp<span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">action</span>&gt;</span></span><br><span class="line">   </span><br><span class="line"><span class="tag">&lt;/<span class="name">package</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>则访问路径改为这么写<strong><a href="http://localhost:8080/struts2001`/hello" target="_blank" rel="noopener">http://localhost:8080/struts2001`/hello</a> `/hello.action</strong></p>
+<h2 id="namespace配置"><a href="#namespace配置" class="headerlink" title="namespace配置"></a>namespace配置</h2><p>package标签：<br> <strong>作用：</strong><br>分包来管理动作配置。把配置文件按照面向对象的思想来管理<br><strong>属性</strong> </p>
+<p><strong>name属性</strong>:指定包的名称。必须写，且必须唯一。<br><strong>extends属性</strong>指定当前包的父包。子包自动具备父包的配置。我们一般都继承struts-default包。<br> struts-default包在struts-default.xml中定义着。如果不继承该包，就不能使用struts2的核心功能。<br><strong>abstract属性</strong>把当前包声明为抽象包。抽象包就是用来被继承。里面可以定义一些公共的配置。<br>只有没有action标签的包才能声明为抽象包。<br><strong>namespace属性</strong>：它是把访问URL按照模块化来管理。<br>  以后我们在浏览器地址栏中访问的URL就变成了 :<br>    名称空间+动作名称(指的是action标签中name属性的取值)<br>例如：/user/add_User.action<br>名称空间的写法：<br>必须以/开头。后面不能是中文。<br>可以允许有多级。例如：/n1/n2/n3<br>名称空间有默认值：<br>默认值是：””  </p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/struts2/">struts2</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2018
+  <span class="author">
+    Amon
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

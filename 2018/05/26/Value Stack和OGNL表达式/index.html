@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>Value Stack和OGNL表达式 - Amon的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content=struts2>
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="Amon的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">Amon的博客</a>
+    <div class="subtitle">瞎扯点儿东西</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">归档</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">Value Stack和OGNL表达式</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2018-05-26</span>
+  </div>
+  <div class="post-content">
+    <h1 id="Value-Stack和OGNL表达式"><a href="#Value-Stack和OGNL表达式" class="headerlink" title="Value Stack和OGNL表达式"></a>Value Stack和OGNL表达式</h1><p>ValueStack是一个接口，而OgnlValueStack是strtus2中的缺省实现。ValueStack中的数据，分两个部分存放：root和context（这与OGNL中的概念一致），同时ValueStack暴露相关的接口：<br><strong>void setValue(String expr, Object value);</strong></p>
+<p><strong>Object findValue(String expr);</strong></p>
+<p>用来通过OGNL表达式对ValueStack中的数据进行操作！</p>
+<font color="red"><strong>ValueStack存值取值操作 ，当我们不操作值栈时，默认的栈顶对象是：当前执行的action动作类</strong></font>
+
+<p>ValueStack中的root对象是CompoundRoot，CompoundRoot继承了ArraryList，提供了额外的方法：push()和pop()方法，用来对root对象中所包含的数据进行存取！<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CompoundRoot</span> <span class="keyword">extends</span> <span class="title">ArrayList</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CompoundRoot</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CompoundRoot</span><span class="params">(List list)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">super</span>(list);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CompoundRoot <span class="title">cutStack</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> CompoundRoot(subList(index, size()));</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">peek</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> get(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> remove(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        add(<span class="number">0</span>, o);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>正是通过这两个方法，CompoundRoot变成了一个栈结构！压栈操作，将导致对象被放到CompoundRoot的第0个元素上（第0个元素是栈顶），其它对象被依次往后移动；出栈操作，将导致CompoundRoot的第0个元素被移除（即栈顶元素被弹出），其它对象被依次往前移动！</p>
+<p>OGNL不支持多个root对象，而struts2能够支持多个root对象，它对OGNL做了扩展。</p>
+<p>如果某个OGNL表达式被传递给ValueStack（即调用ValueStack的setValue或findValue方法），而表达式中包含有对root对象的访问操作，ValueStack将依次从栈顶往栈底搜索CompoundRoot对象中所包含的对象，看哪个对象具有相应的属性，找到之后，立刻返回。</p>
+<p><strong>在Struts2中，一个请求在最终到达Action的方法之前，Action对象本身会被压入ValueStack（实际上就是放到ValueStack的CompoundRoot中），所以Action对象是CompoundRoot中的一个元素。</strong></p>
+<p>看下面的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserAction</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> valid;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//查看用户的详细信息</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">detail</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">       username = <span class="string">"张三"</span>;</span><br><span class="line">       age = <span class="number">18</span>;</span><br><span class="line">       valid = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> <span class="string">"detail"</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>在Action中，给Action的username/age/valid赋值。Detail页面如下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">username:<span class="tag">&lt;<span class="name">s:property</span> <span class="attr">value</span>=<span class="string">"username"</span>/&gt;</span> <span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">valid:<span class="tag">&lt;<span class="name">s:property</span> <span class="attr">value</span>=<span class="string">"valid"</span>/&gt;</span> <span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">age:<span class="tag">&lt;<span class="name">s:property</span> <span class="attr">value</span>=<span class="string">"age"</span>/&gt;</span> <span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>上述JSP页面将能正确将它们的值取出。&lt;s:property value=”ognl表达式”/&gt;。在s:property标签中的OGNL表达式，最终会交给ValueStack来解释。<font color="red">username就是一个OGNL表达式，意思是调用root对象的getUsername()方法</font>。Struts2将自动搜索CompoundRoot中有哪些元素（从第0个元素开始搜索），检测这些元素是否有getUsername()方法，如果第0个元素没有getUsername()方法，将继续搜索第1、2、3……个元素是否有getUsername()方法。</p>
+<p><em>在上面的例子中，CompoundRoot中只有一个对象，就是userAction对象，而这个对象中正好有getUsername()方法，所以，上述JSP代码将能够将值正确取出。</em></p>
+<p>再看下面的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserAction</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//查看用户的详细信息</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">detail</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">       username = <span class="string">"张三"</span>;</span><br><span class="line">       name = <span class="string">"王五"</span>;</span><br><span class="line"></span><br><span class="line">       User u = <span class="keyword">new</span> User();</span><br><span class="line">       u.setUsername(<span class="string">"赵毅"</span>);</span><br><span class="line"></span><br><span class="line">       ActionContext.getContext().getValueStack().push(u);</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> <span class="string">"detail"</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>在上面这个UserAction的代码中，我们直接调用ActionContext.getContext().getValueStack().push()方法，<font color="red">把一个User对象（这个对象拥有getUsername()和setUsername()方法）直接压入到ValueStack中，这时候，在ValueStack的CompoundRoot中将有两个元素：第0个元素是刚刚压入的user对象[赵毅],而第1个元素是userAction对象[张三]。</font>如果在JSP中使用下面的表达式来取值：</p>
+<p>&lt;s:property value=”username”/&gt; ，那么输出的值将是“赵毅”！struts2将会从第0个元素开始搜索CompoundRoot中的对象，第0个元素正是刚刚压入的那个user对象！</p>
+<p>如果在JSP中使用&lt;s:property value=”name”/&gt;来取值，将取出“王五”，<strong>因为第0个元素user对象没有name属性，所以，会继续搜索第1个元素userAction对象，在这个对象中就有name属性了！</strong></p>
+<p>再看下面的示例3：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserAction</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//查看用户的详细信息</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">detail</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">       username = <span class="string">"张三"</span>;</span><br><span class="line"></span><br><span class="line">       List list = <span class="keyword">new</span> ArrayList();</span><br><span class="line"></span><br><span class="line">       <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">10</span>; i++)&#123;</span><br><span class="line">           User user = <span class="keyword">new</span> User();</span><br><span class="line">           user.setUsername(<span class="string">"User"</span>+i);</span><br><span class="line"></span><br><span class="line">           list.add(user);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       ActionContext.getContext().put(<span class="string">"users"</span>, list);</span><br><span class="line"></span><br><span class="line">       User u = <span class="keyword">new</span> User();</span><br><span class="line">       u.setUsername(<span class="string">"赵毅"</span>);</span><br><span class="line"></span><br><span class="line">       ActionContext.getContext().getValueStack().push(u);</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> <span class="string">"detail"</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>对应的JSP如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">s:property</span> <span class="attr">value</span>=<span class="string">"username"</span>/&gt;</span> <span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">s:iterator</span> <span class="attr">value</span>=<span class="string">"#users"</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">s:property</span> <span class="attr">value</span>=<span class="string">"username"</span>/&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">s:property</span> <span class="attr">value</span>=<span class="string">"#root[2].username"</span>/&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">s:iterator</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">s:property</span> <span class="attr">value</span>=<span class="string">"username"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">s:property</span> <span class="attr">value</span>=<span class="string">"#root[1].username"</span>/&gt;</span> <span class="comment">&lt;!-- 张三 --&gt;</span></span><br></pre></td></tr></table></figure>
+<p>根据刚才的示例，我们知道，第1行的username是“赵毅”（因为JSP在执行这行代码的时候，CompoundRoot中有两个元素：第0个是“user对象赵毅”，第1个是“userAction对象张三”），因此第1行的username将取出CompoundRoot中第0个元素的username属性：赵毅。</p>
+<p>第2行代码是iterator标签，<font color="red">只定义了一个value属性，iterator标签将循环访问users这个List中的User对象，并把当前循环的user对象压入到CompoundRoot中</font>！所以，<font color="red">在第3行和第4行代码被执行的时候，CompoundRoot中总共有3个元素</font>：第0个元素是被iterator标签压入的当前循环的user对象；第1个元素是“user对象赵毅”；第2个元素是“userAction对象张三”，因此第3行代码的执行结果就是输出“UserX”，即当前循环的user对象的username属性！iterator标签将会依次取出List中的user对象，并不断压入/弹出user对象（每次循环，都将执行一遍压入/弹出）。而第4行代码取第2个元素的username属性，即userAction对象的username属性：张三。</p>
+<p><font color="red">第5行代码执行完成之后，在CompoundRoot中将剩下2个元素</font>，与第2行代码被执行之前一样。所以，第6行代码的输出和第1行代码的输出结果是一样的，而第7行代码将取出userAction对象的username属性：张三。</p>
+<p><strong>由于Struts 2中值栈被视为根对象，所以访问其他非根对象时，需要加#前缀。</strong></p>
+<h3 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h3><p>值栈背后原理：<br><a href="http://blog.csdn.net/li_tengfei/article/details/6098134" target="_blank" rel="noopener">http://blog.csdn.net/li_tengfei/article/details/6098134</a></p>
+<p>另一种解说：<br><a href="http://blog.csdn.net/shb_derek1/article/details/8234506" target="_blank" rel="noopener">http://blog.csdn.net/shb_derek1/article/details/8234506</a></p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/struts2/">struts2</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2018
+  <span class="author">
+    Amon
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

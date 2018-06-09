@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>strtus2工作原理 - Amon的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content=struts2>
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="Amon的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">Amon的博客</a>
+    <div class="subtitle">瞎扯点儿东西</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">归档</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">strtus2工作原理</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2018-05-26</span>
+  </div>
+  <div class="post-content">
+    <h1 id="strtus2工作原理"><a href="#strtus2工作原理" class="headerlink" title="strtus2工作原理"></a>strtus2工作原理</h1><p>一个请求在Struts2框架中的处理大概分为以下几个步骤(可查看源码：<a href="https://github.com/apache/struts)" target="_blank" rel="noopener">https://github.com/apache/struts)</a>:</p>
+<ol>
+<li>客户端初始化一个指向Servlet容器（例如Tomcat）的请求</li>
+<li>这个请求经过一系列的过滤器（Filter）（这些过滤器中有一个叫做ActionContextCleanUp的可选过滤器，这个过滤器对于Struts2和其他框架的集成很有帮助，例如：SiteMesh Plugin） </li>
+<li>接着FilterDispatcher（现已过时）被调用，FilterDispatcher询问ActionMapper来决定这个请求是否需要调用某个Action<br>4 .如果ActionMapper决定需要调用某个Action，FilterDispatcher把请求的处理交给ActionProxy </li>
+<li>ActionProxy通过Configuration Manager询问框架的配置文件，找到需要调用的Action类 </li>
+<li>ActionProxy创建一个ActionInvocation的实例。</li>
+<li>ActionInvocation实例使用命名模式来调用，在调用Action的过程前后，涉及到相关拦截器（Intercepter）的调用。 </li>
+<li>一旦Action执行完毕，ActionInvocation负责根据struts.xml中的配置找到对应的返回结果。返回结果通常是（但不总是，也可 能是另外的一个Action链）一个需要被表示的JSP或者FreeMarker的模版。在表示的过程中可以使用Struts2 框架中继承的标签。在这个过程中需要涉及到ActionMapper.</li>
+</ol>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/struts2/">struts2</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2018
+  <span class="author">
+    Amon
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

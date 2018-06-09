@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>struts2开发过程中遇到的问题 - Amon的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content=struts2>
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="Amon的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">Amon的博客</a>
+    <div class="subtitle">瞎扯点儿东西</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">归档</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">struts2开发过程中遇到的问题</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2018-05-26</span>
+  </div>
+  <div class="post-content">
+    <h1 id="struts2开发过程中遇到的问题"><a href="#struts2开发过程中遇到的问题" class="headerlink" title="struts2开发过程中遇到的问题"></a>struts2开发过程中遇到的问题</h1><h2 id="struts启动报错Javassist-library-is-missing"><a href="#struts启动报错Javassist-library-is-missing" class="headerlink" title="struts启动报错Javassist library is missing"></a>struts启动报错Javassist library is missing</h2><p>这是因为xwork迁移到Apache以后，把用了新的OGNL 3.x ，新的OGNL 3.x把Javassist 的依赖给去掉了，所以就得自己加jar包 或者加maven依赖<br>最简单的找到这个依赖jar包的办法 自然是到struts的完整压缩包里的app目录下去找<br>把javassist-3.11.0.GA.jar这个依赖加上就好了。<br>（或者去网上下载下来即可）</p>
+<h2 id="struts工程要加入的基础jar包"><a href="#struts工程要加入的基础jar包" class="headerlink" title="struts工程要加入的基础jar包"></a>struts工程要加入的基础jar包</h2><ul>
+<li>commons-beanutils-1.9.2.jar <ul>
+<li>commons-collections-3.2.2.jar </li>
+<li>commons-fileupload-1.3.3.jar </li>
+<li>commons-io-2.5.jar </li>
+<li>commons-lang3-3.6.jar 【struts对java.lang包的扩展】 </li>
+<li>commons-logging-1.1.3.jar </li>
+<li>freemarker-2.3.26-incubating.jar </li>
+<li>javassist.jar </li>
+<li>log4j-api-2.9.1.jar </li>
+<li>ognl-3.1.15.jar </li>
+<li>struts2-core-2.5.14.1.jar</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/struts2/">struts2</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2018
+  <span class="author">
+    Amon
+  </span>
+</footer>
+    </div>
+  </body>
+</html>
